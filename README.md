@@ -1,20 +1,61 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Bep-Dzui-v2.1
 
-# Run and deploy your AI Studio app
+## Giới thiệu dự án
 
-This contains everything you need to run your app locally.
+**Bep-Dzui** là một ứng dụng web được thiết kế để đơn giản hóa công việc bếp núc và lập kế hoạch bữa ăn cho mọi người. Ứng dụng giúp bạn quản lý các công thức nấu ăn, tạo ra các kế hoạch bữa ăn hàng tuần một cách dễ dàng.
 
-View your app in AI Studio: https://ai.studio/apps/drive/10fCPbuD82igqNKtY4nH3peNVyBHOuPYl
+Điểm nổi bật của dự án là tính năng **"Sous Chef"** - một trợ lý ảo thông minh được tích hợp AI. "Sous Chef" sử dụng **Google Gemini API** để trò chuyện, đưa ra gợi ý, trả lời các câu hỏi liên quan đến nấu ăn và giúp bạn khám phá những ý tưởng ẩm thực mới mẻ.
 
-## Run Locally
+Bạn có thể tìm hiểu thêm về Google Gemini API tại [Google AI Studio](https://ai.google.dev/).
 
-**Prerequisites:**  Node.js
+## Chức năng chính
+
+*   **Quản lý Công thức:** Lưu trữ, tìm kiếm và sắp xếp các công thức nấu ăn yêu thích của bạn.
+*   **Lập kế hoạch Bữa ăn:** Dễ dàng tạo lịch trình các bữa ăn cho cả tuần, giúp bạn chuẩn bị tốt hơn.
+*   **Trợ lý AI "Sous Chef":** Giao tiếp với AI để nhận được lời khuyên nấu nướng, gợi ý công thức và giải đáp thắc mắc.
+*   **Giao diện người dùng thân thiện:** Thiết kế đơn giản, trực quan, dễ dàng sử dụng.
+
+## Hướng dẫn cài đặt và chạy dự án
+
+Để chạy dự án này trên máy tính của bạn, hãy làm theo các bước sau:
+
+### Yêu cầu
+
+*   [Node.js](https://nodejs.org/) (phiên bản 18.x trở lên được khuyến nghị)
+*   [npm](https://www.npmjs.com/) (thường được cài đặt cùng với Node.js)
+
+### Các bước thực hiện
+
+1.  **Tải mã nguồn về máy:**
+    Mở Terminal hoặc Command Prompt và clone repository:
+    ```bash
+    git clone https://github.com/[your-username]/Bep-Dzui-v2.1.git
+    ```
+
+2.  **Vào thư mục dự án:**
+    ```bash
+    cd Bep-Dzui-v2.1
+    ```
+
+3.  **Cài đặt các thư viện cần thiết:**
+    ```bash
+    npm install
+    ```
+
+4.  **Thiết lập biến môi trường:**
+    *   Bạn sẽ thấy một file tên là `.env.example` trong thư mục gốc của dự án.
+    *   Sao chép file này và đổi tên thành `.env.local`:
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+
+5.  **Chạy ứng dụng:**
+    ```bash
+    npm run dev
+    ```
+    Ứng dụng sẽ tự động mở trong trình duyệt của bạn, thường là tại địa chỉ `http://localhost:3000`.
+
+5.  **Link demo trong GG studio AI**
+    ```bash
+    https://aistudio.google.com/apps/drive/1i07Jf1CaGWBq-uihA063Uian2LYtflqr?showPreview=true&showAssistant=true
+    ```
+---
