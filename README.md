@@ -4,16 +4,16 @@
 
 **Bep-Dzui** là một ứng dụng web được thiết kế để đơn giản hóa công việc bếp núc và lập kế hoạch bữa ăn cho mọi người. Ứng dụng giúp bạn quản lý các công thức nấu ăn, tạo ra các kế hoạch bữa ăn hàng tuần một cách dễ dàng.
 
-Điểm nổi bật của dự án là tính năng **"Sous Chef"** - một trợ lý ảo thông minh được tích hợp AI. "Sous Chef" sử dụng **Google Gemini API** để trò chuyện, đưa ra gợi ý, trả lời các câu hỏi liên quan đến nấu ăn và giúp bạn khám phá những ý tưởng ẩm thực mới mẻ.
+Điểm nổi bật của dự án là tính năng **"Bếp phó Dzui"** - một trợ lý ảo thông minh được tích hợp AI. "Bếp phó Dzui" sử dụng **Google Gemini API** để trò chuyện, đưa ra gợi ý, trả lời các câu hỏi liên quan đến nấu ăn và giúp bạn khám phá những ý tưởng ẩm thực mới mẻ.
 
 Bạn có thể tìm hiểu thêm về Google Gemini API tại [Google AI Studio](https://ai.google.dev/).
 
 ## Chức năng chính
 
-*   **Quản lý Công thức:** Lưu trữ, tìm kiếm và sắp xếp các công thức nấu ăn yêu thích của bạn.
+*   **Tạo công thức:** Hướng dẫn tạo công thức dựa trên tên món, nguyên liệu sẵn có và hình ảnh.
 *   **Lập kế hoạch Bữa ăn:** Dễ dàng tạo lịch trình các bữa ăn cho cả tuần, giúp bạn chuẩn bị tốt hơn.
-*   **Trợ lý AI "Sous Chef":** Giao tiếp với AI để nhận được lời khuyên nấu nướng, gợi ý công thức và giải đáp thắc mắc.
-*   **Giao diện người dùng thân thiện:** Thiết kế đơn giản, trực quan, dễ dàng sử dụng.
+*   **Trợ lý AI "Bếp phó Dzui":** Giao tiếp với AI để nhận được lời khuyên nấu nướng, gợi ý công thức và giải đáp thắc mắc.
+*   **Giao diện người dùng thân thiện:** Thiết kế đơn giản, cá nhân hóa, trực quan, dễ dàng sử dụng.
 
 ## Hướng dẫn cài đặt và chạy dự án
 
@@ -29,7 +29,7 @@ Bạn có thể tìm hiểu thêm về Google Gemini API tại [Google AI Studio
 1.  **Tải mã nguồn về máy:**
     Mở Terminal hoặc Command Prompt và clone repository:
     ```bash
-    git clone https://github.com/[your-username]/Bep-Dzui-v2.1.git
+    git clone https://github.com/phongggnguyen/Bep-Dzui-v2.1.git
     ```
 
 2.  **Vào thư mục dự án:**
@@ -44,7 +44,8 @@ Bạn có thể tìm hiểu thêm về Google Gemini API tại [Google AI Studio
 
 4.  **Thiết lập biến môi trường:**
     *   Bạn sẽ thấy một file tên là `.env.example` trong thư mục gốc của dự án.
-    *   Sao chép file này và đổi tên thành `.env.local`:
+    *   Sao chép file này và đổi tên thành `.env.local`.
+    *   Thay API key riêng của bạn.
 
 
 
