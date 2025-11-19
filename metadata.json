@@ -1,0 +1,7 @@
+{
+  "name": "Bếp Dzui",
+  "description": "Trợ lý nấu ăn thông minh sử dụng AI để nhận diện món ăn, lên thực đơn và tạo danh sách đi chợ.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
