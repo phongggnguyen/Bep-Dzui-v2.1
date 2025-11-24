@@ -12,6 +12,20 @@ export interface Ingredient {
   category?: 'meat' | 'vegetable' | 'spice' | 'dry' | 'other';
 }
 
+export interface HealthInfo {
+  calories: {
+    min: number;
+    max: number;
+  };
+  healthScore: number; // 0-100
+  nutritionTags: string[]; // e.g., "Giàu Protein", "Nhiều chất béo bão hòa"
+  exerciseEquivalents: Array<{
+    activity: string;
+    duration: string;
+  }>;
+  advice: string; // Lời khuyên chuyên sâu
+}
+
 export interface Recipe {
   name: string;
   description: string;
@@ -20,6 +34,7 @@ export interface Recipe {
   cookingTime: string;
   difficulty: 'Dễ' | 'Trung bình' | 'Khó';
   quickVersion?: string;
+  healthInfo?: HealthInfo;
 }
 
 export interface AnalyzedDish {

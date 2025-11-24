@@ -92,8 +92,33 @@ export const generateRecipe = async (query: string, userProfile: UserProfile): P
       "steps": ["bước 1", "bước 2"],
       "cookingTime": "ví dụ: 30 phút",
       "difficulty": "Dễ/Trung bình/Khó",
-      "quickVersion": "Phiên bản nấu nhanh trong 15p (nếu có thể)"
+      "quickVersion": "Phiên bản nấu nhanh trong 15p (nếu có thể)",
+      "healthInfo": {
+        "calories": {
+          "min": 400,
+          "max": 500
+        },
+        "healthScore": 85,
+        "nutritionTags": ["Giàu Protein", "Nhiều chất xơ", "Ít đường"],
+        "exerciseEquivalents": [
+          {"activity": "Đi bộ nhanh", "duration": "45 phút"},
+          {"activity": "Chạy bộ", "duration": "25 phút"},
+          {"activity": "Bơi lội", "duration": "30 phút"}
+        ],
+        "advice": "Món này tốt cho phục hồi cơ bắp nhờ hàm lượng protein cao. Nếu đang giảm cân, nên hạn chế lượng dầu khi chế biến và ăn kèm nhiều rau xanh để tăng cảm giác no."
+      }
     }
+
+    CHÚ Ý VỀ HEALTH INFO:
+    1. Calories: Tính toán dựa trên tổng nguyên liệu (cho 1 khẩu phần), ước lượng khoảng min-max hợp lý.
+    2. Health Score (0-100): Đánh giá dựa trên mục tiêu người dùng "${userProfile.goal}":
+       - 80-100: Rất phù hợp với mục tiêu
+       - 60-79: Tốt, có thể điều chỉnh nhẹ
+       - 40-59: Trung bình, cần lưu ý một số điểm
+       - 0-39: Ít phù hợp, nên cân nhắc
+    3. Nutrition Tags: Tối đa 3-4 tags nổi bật (ví dụ: "Giàu Protein", "Nhiều chất béo bão hòa", "Ít chất xơ", "Giàu Vitamin", "Nhiều Carbs", v.v.)
+    4. Exercise Equivalents: Đề xuất 3 hoạt động phổ biến để tiêu hao lượng calo nạp vào.
+    5. Advice: 2-3 câu phân tích ngắn gọn về lợi ích hoặc lưu ý khi ăn món này, có liên quan đến mục tiêu của người dùng.
   `;
 
   try {

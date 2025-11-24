@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed } from 'lucide-react';
+import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed, HeartPulse, Info, Activity, Dumbbell } from 'lucide-react';
 import { generateRecipe } from '../services/geminiService';
 import { UserProfile, Recipe } from '../types';
 
@@ -242,6 +242,131 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                </div>
             </div>
           </div>
+
+          {/* Health Corner Section - REDESIGNED */}
+          {recipe.healthInfo && (
+            <div className="bg-gradient-to-b from-green-50 to-white rounded-[2rem] p-6 sm:p-10 shadow-sm border border-green-200 animate-fade-in">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-8">
+                <HeartPulse size={32} className="text-green-700" strokeWidth={2.5} />
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-green-800">Góc sức khỏe & Dinh dưỡng</h3>
+              </div>
+
+              {/* Two Column Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+                {/* LEFT COLUMN - Score & Overview (40%) */}
+                <div className="lg:col-span-2">
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 h-full">
+
+                    {/* Score Circle */}
+                    <div className="flex flex-col items-center mb-8">
+                      <div className={`relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-[6px] flex items-center justify-center ${
+                        recipe.healthInfo.healthScore >= 80 ? 'border-green-500' :
+                        recipe.healthInfo.healthScore >= 60 ? 'border-yellow-500' :
+                        recipe.healthInfo.healthScore >= 40 ? 'border-orange-500' : 'border-red-500'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`text-5xl sm:text-6xl font-black ${
+                            recipe.healthInfo.healthScore >= 80 ? 'text-green-500' :
+                            recipe.healthInfo.healthScore >= 60 ? 'text-yellow-500' :
+                            recipe.healthInfo.healthScore >= 40 ? 'text-orange-500' : 'text-red-500'
+                          }`}>
+                            {recipe.healthInfo.healthScore}
+                          </div>
+                          <div className="text-sm text-gray-400 font-bold">/100</div>
+                        </div>
+                      </div>
+
+                      {/* Score Label */}
+                      <p className={`mt-4 font-bold text-center ${
+                        recipe.healthInfo.healthScore >= 80 ? 'text-green-700' :
+                        recipe.healthInfo.healthScore >= 60 ? 'text-yellow-700' :
+                        recipe.healthInfo.healthScore >= 40 ? 'text-orange-700' : 'text-red-700'
+                      }`}>
+                        {recipe.healthInfo.healthScore >= 80 ? 'Rất phù hợp với mục tiêu' :
+                         recipe.healthInfo.healthScore >= 60 ? 'Tốt cho sức khỏe' :
+                         recipe.healthInfo.healthScore >= 40 ? 'Cân nhắc điều chỉnh' :
+                         'Ít phù hợp'}
+                      </p>
+                    </div>
+
+                    {/* Calories Info */}
+                    <div className="flex items-center justify-between py-3 border-t border-b border-gray-100 mb-6">
+                      <div className="flex items-center gap-2">
+                        <Flame size={20} className="text-orange-500" />
+                        <span className="text-gray-600 text-sm">Calo ước tính</span>
+                      </div>
+                      <span className="font-black text-gray-900">{recipe.healthInfo.calories.min}-{recipe.healthInfo.calories.max} Kcal</span>
+                    </div>
+
+                    {/* Nutrition Tags */}
+                    <div>
+                      <h4 className="text-xs uppercase font-bold text-gray-500 mb-3 tracking-wide">Đặc điểm dinh dưỡng</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {recipe.healthInfo.nutritionTags.map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1.5 bg-green-100 text-green-800 rounded-full text-xs font-semibold"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* RIGHT COLUMN - Exercise & Advice (60%) */}
+                <div className="lg:col-span-3 space-y-6">
+
+                  {/* Exercise Suggestions */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Activity size={18} className="text-orange-500" />
+                      <h4 className="text-xs uppercase font-bold text-gray-500 tracking-wide">Gợi ý tập luyện để tiêu hao</h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {recipe.healthInfo.exerciseEquivalents.map((exercise, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="bg-orange-100 p-2.5 rounded-full shrink-0">
+                              <Dumbbell size={18} className="text-orange-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-gray-900 text-sm leading-tight">{exercise.activity}</p>
+                              <p className="text-gray-500 text-xs mt-1">{exercise.duration}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Advice Tip Box */}
+                  <div className="relative bg-green-600 rounded-2xl p-6 overflow-hidden">
+                    {/* Decorative blur circle */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
+
+                    {/* Content */}
+                    <div className="relative flex items-start gap-4">
+                      <div className="shrink-0">
+                        <Info size={24} className="text-green-100" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-bold mb-2 text-lg">Lời khuyên cho bạn</h4>
+                        <p className="text-green-50 leading-relaxed text-sm">{recipe.healthInfo.advice}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
