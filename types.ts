@@ -1,6 +1,7 @@
 
 export interface UserProfile {
   name: string;
+  email?: string;
   goal: string;
   dietaryNotes: string; // Combined preferences, allergies, dislikes
   cookingTime: number; // minutes
