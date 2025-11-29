@@ -1,19 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed, HeartPulse, Info, Activity, Dumbbell } from 'lucide-react';
+import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed, HeartPulse, Info, Activity, Dumbbell, Save, History, BookmarkPlus } from 'lucide-react';
 import { generateRecipe } from '../services/geminiService';
-import { UserProfile, Recipe } from '../types';
+import { UserProfile, Recipe, SavedRecipe } from '../types';
+import { saveRecipe } from '../services/recipeService';
+import { useAuth } from '../context/AuthContext';
+import RecipeHistory from '../components/RecipeHistory';
 
 export default function RecipePage({ user }: { user: UserProfile }) {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get('query') || '';
-  
+  const { currentUser } = useAuth();
+
   const [query, setQuery] = useState(initialQuery);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
-  
+  const [saving, setSaving] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
   // Mobile Tab State: 'ingredients' or 'steps'
   const [activeTab, setActiveTab] = useState<'ingredients' | 'steps'>('ingredients');
 
@@ -45,11 +51,48 @@ export default function RecipePage({ user }: { user: UserProfile }) {
     setCheckedIngredients(prev => ({...prev, [idx]: !prev[idx]}));
   };
 
+  const handleSaveRecipe = async () => {
+    if (!recipe || !currentUser) return;
+
+    setSaving(true);
+    try {
+      await saveRecipe(currentUser.uid, recipe, query);
+      alert('Đã lưu công thức thành công! 🎉');
+    } catch (error) {
+      alert('Không thể lưu công thức. Vui lòng thử lại.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSelectHistoryRecipe = (savedRecipe: SavedRecipe) => {
+    setRecipe(savedRecipe);
+    setQuery(savedRecipe.query);
+    setCheckedIngredients({});
+    setShowHistory(false);
+    setActiveTab('ingredients');
+  };
+
   return (
     <div className="pb-24 sm:pb-10">
-      <div className="mb-6 sm:mb-8 px-2 sm:px-0">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Bếp trưởng AI</h1>
-        <p className="text-sm sm:text-base text-gray-500">Nhập tên món hoặc nguyên liệu bạn có để bắt đầu.</p>
+      <div className="mb-6 sm:mb-8 px-2 sm:px-0 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Bếp trưởng AI</h1>
+          <p className="text-sm sm:text-base text-gray-500">Nhập tên món hoặc nguyên liệu bạn có để bắt đầu.</p>
+        </div>
+
+        {/* History Button */}
+        <button
+          onClick={() => setShowHistory(!showHistory)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+            showHistory
+              ? 'bg-orange-500 text-white shadow-lg'
+              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+          }`}
+        >
+          <History size={18} />
+          <span className="hidden sm:inline">Lịch sử</span>
+        </button>
       </div>
 
       {/* Search Input Area - Restyled for Light/Soft UI */}
@@ -82,6 +125,13 @@ export default function RecipePage({ user }: { user: UserProfile }) {
         </div>
       </div>
 
+      {/* Recipe History Section */}
+      {showHistory && currentUser && (
+        <div className="mb-8 px-2 sm:px-0 animate-fadeInUp">
+          <RecipeHistory userId={currentUser.uid} onSelectRecipe={handleSelectHistoryRecipe} />
+        </div>
+      )}
+
       {loading && (
         <div className="flex flex-col items-center justify-center py-20 animate-pulse px-4 text-center">
           <div className="bg-white p-4 rounded-full shadow-xl mb-4 border border-orange-50">
@@ -94,7 +144,30 @@ export default function RecipePage({ user }: { user: UserProfile }) {
 
       {recipe && !loading && (
         <div className="animate-fade-in-up space-y-6 px-2 sm:px-0">
-          
+
+          {/* Save Recipe Button */}
+          {currentUser && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleSaveRecipe}
+                disabled={saving}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-semibold shadow-lg shadow-green-200 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    Đang lưu...
+                  </>
+                ) : (
+                  <>
+                    <BookmarkPlus size={20} />
+                    Lưu công thức
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
           {/* Header Card - Compact on Mobile */}
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-8 shadow-sm border border-orange-100">
             <div className="flex flex-col gap-4">

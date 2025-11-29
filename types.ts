@@ -38,6 +38,14 @@ export interface Recipe {
   healthInfo?: HealthInfo;
 }
 
+export interface SavedRecipe extends Recipe {
+  id: string;
+  userId: string;
+  query: string; // Original search query
+  createdAt: Date;
+  isFavorite?: boolean;
+}
+
 export interface AnalyzedDish {
   dishName: string;
   ingredients: string[];
