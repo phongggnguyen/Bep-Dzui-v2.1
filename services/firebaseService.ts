@@ -1,9 +1,9 @@
 // services/firebaseService.ts
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Cấu hình Firebase một cách an toàn từ biến môi trường
+// Cấu hình Firebase từ biến môi trường
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -16,6 +16,9 @@ const firebaseConfig = {
 // Khởi tạo Firebase
 const app = initializeApp(firebaseConfig);
 
-// Khởi tạo và export các dịch vụ của Firebase để dùng trong ứng dụng
+// Khởi tạo và export các dịch vụ Firebase dùng trong ứng dụng
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Google provider cho đăng nhập OAuth
+export const googleProvider = new GoogleAuthProvider();

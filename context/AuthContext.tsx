@@ -1,8 +1,8 @@
 // context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
+import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../services/firebaseService';
+import { auth, db, googleProvider } from '../services/firebaseService';
 import { UserProfile } from '../types';
 import { getVietnameseErrorMessage } from '../utils/firebaseErrors';
 
@@ -20,6 +20,7 @@ interface AuthContextType {
   error: string | null;
   signup: (email: string, password: string, name: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   saveProfile: (profile: UserProfile) => Promise<void>;
@@ -108,6 +109,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
   };
 
+  const loginWithGoogle = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const userDocRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDocRef);
+
+      let profile: UserProfile;
+      if (docSnap.exists()) {
+        profile = docSnap.data() as UserProfile;
+      } else {
+        profile = {
+          ...defaultProfile,
+          name: user.displayName || user.email?.split('@')[0] || 'Nguoi dung',
+          email: user.email || '',
+        };
+        await setDoc(userDocRef, profile);
+      }
+
+      setUserProfile(profile);
+    } catch (err: any) {
+      const vietnameseError = getVietnameseErrorMessage(err);
+      setError(vietnameseError);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = async () => {
     await signOut(auth);
   };
@@ -143,6 +175,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     error,
     signup,
     login,
+    loginWithGoogle,
     logout,
     resetPassword,
     saveProfile
@@ -154,3 +187,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+
+
+
