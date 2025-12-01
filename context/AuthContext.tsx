@@ -1,26 +1,43 @@
 // context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithPopup } from 'firebase/auth';
+import {
+  User,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+  signInWithPopup,
+} from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../services/firebaseService';
 import { UserProfile } from '../types';
 import { getVietnameseErrorMessage } from '../utils/firebaseErrors';
 
 const defaultProfile: UserProfile = {
-  name: 'Bạn mới',
+  name: 'Ban moi',
   goal: 'healthy',
   dietaryNotes: '',
   cookingTime: 30,
 };
 
+const guestProfileTemplate: UserProfile = {
+  ...defaultProfile,
+  name: 'Khach',
+};
+
+const GUEST_STORAGE_KEY = 'bepdzui_guest';
+
 interface AuthContextType {
   currentUser: User | null;
   userProfile: UserProfile | null;
+  isGuest: boolean;
   loading: boolean;
   error: string | null;
   signup: (email: string, password: string, name: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  continueAsGuest: () => void;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   saveProfile: (profile: UserProfile) => Promise<void>;
@@ -43,14 +60,37 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const loadGuestProfile = (): UserProfile | null => {
+    const raw = localStorage.getItem(GUEST_STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as UserProfile;
+    } catch {
+      return null;
+    }
+  };
+
+  const persistGuestProfile = (profile: UserProfile | null) => {
+    if (profile) {
+      localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(profile));
+    } else {
+      localStorage.removeItem(GUEST_STORAGE_KEY);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+
       if (user) {
-        const userDocRef = doc(db, "users", user.uid);
+        setIsGuest(false);
+        persistGuestProfile(null);
+
+        const userDocRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(userDocRef);
 
         if (docSnap.exists()) {
@@ -60,13 +100,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const migrationProfile: UserProfile = {
             ...defaultProfile,
             name: user.email?.split('@')[0] || 'User',
-            email: user.email!,
+            email: user.email || '',
           };
           await setDoc(userDocRef, migrationProfile);
           setUserProfile(migrationProfile);
         }
       } else {
-        setUserProfile(null);
+        const guestProfile = loadGuestProfile();
+        if (guestProfile) {
+          setIsGuest(true);
+          setUserProfile(guestProfile);
+        } else {
+          setIsGuest(false);
+          setUserProfile(null);
+        }
       }
       setLoading(false);
     });
@@ -81,9 +128,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const newProfile: UserProfile = {
         ...defaultProfile,
         name: name,
-        email: userCredential.user.email!,
+        email: userCredential.user.email || '',
       };
-      await setDoc(doc(db, "users", userCredential.user.uid), newProfile);
+      await setDoc(doc(db, 'users', userCredential.user.uid), newProfile);
       // Set profile in state immediately to avoid race condition and UI flicker.
       setUserProfile(newProfile);
     } catch (err: any) {
@@ -91,22 +138,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(vietnameseError);
       throw err;
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
-      setError(null);
-      setLoading(true);
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err: any) {
-        const vietnameseError = getVietnameseErrorMessage(err);
-        setError(vietnameseError);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
+    setError(null);
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err: any) {
+      const vietnameseError = getVietnameseErrorMessage(err);
+      setError(vietnameseError);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loginWithGoogle = async () => {
@@ -115,7 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      const userDocRef = doc(db, "users", user.uid);
+      const userDocRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(userDocRef);
 
       let profile: UserProfile;
@@ -140,7 +187,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const continueAsGuest = () => {
+    setError(null);
+    const storedProfile = loadGuestProfile();
+    const profile = storedProfile || guestProfileTemplate;
+    setCurrentUser(null);
+    setIsGuest(true);
+    setUserProfile(profile);
+    persistGuestProfile(profile);
+    setLoading(false);
+  };
+
   const logout = async () => {
+    if (isGuest) {
+      setIsGuest(false);
+      setUserProfile(null);
+      persistGuestProfile(null);
+      return;
+    }
     await signOut(auth);
   };
 
@@ -159,26 +223,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const saveProfile = async (profile: UserProfile) => {
+    if (isGuest) {
+      setUserProfile(profile);
+      persistGuestProfile(profile);
+      return;
+    }
+
     if (currentUser) {
-      const userDocRef = doc(db, "users", currentUser.uid);
+      const userDocRef = doc(db, 'users', currentUser.uid);
       await setDoc(userDocRef, profile, { merge: true });
       setUserProfile(profile);
     } else {
-      throw new Error("Không có người dùng nào đang đăng nhập để lưu hồ sơ.");
+      throw new Error('Khong co nguoi dung dang nhap de luu ho so.');
     }
   };
 
   const value = {
     currentUser,
     userProfile,
+    isGuest,
     loading,
     error,
     signup,
     login,
     loginWithGoogle,
+    continueAsGuest,
     logout,
     resetPassword,
-    saveProfile
+    saveProfile,
   };
 
   return (
@@ -187,7 +259,3 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-
-
-

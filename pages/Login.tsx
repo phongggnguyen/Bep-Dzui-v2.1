@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
-  const { login, loginWithGoogle, resetPassword, error, currentUser, loading } = useAuth();
+  const { login, loginWithGoogle, resetPassword, error, currentUser, loading, continueAsGuest } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,6 +51,13 @@ const Login: React.FC = () => {
     } catch (err) {
       console.error("Failed to log in with Google:", error);
     }
+  };
+
+  const handleGuest = () => {
+    if (loading) return;
+    continueAsGuest();
+    const from = location.state?.from?.pathname || '/';
+    navigate(from, { replace: true });
   };
 
   if (currentUser && !loading) {
@@ -221,6 +228,15 @@ const Login: React.FC = () => {
           }
         >
           Dang nhap voi Google
+        </AuthButton>
+
+        <AuthButton
+          type="button"
+          onClick={handleGuest}
+          loading={loading}
+          variant="outline"
+        >
+          Dung thu voi tu cach khach
         </AuthButton>
 
         {/* Sign up link */}
