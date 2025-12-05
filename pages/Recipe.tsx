@@ -253,22 +253,22 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                     <div 
                       key={idx} 
                       onClick={() => toggleIngredient(idx)}
-                      className={`group flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      className={`group flex items-start justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${
                         checkedIngredients[idx] 
                           ? 'bg-green-50 border-green-100' 
                           : 'bg-gray-50/50 border-transparent hover:bg-orange-50 hover:border-orange-100'
                       }`}
                     >
-                      <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
                         {checkedIngredients[idx] 
                           ? <CheckCircle2 size={20} className="text-green-500 shrink-0" /> 
                           : <Circle size={20} className="text-gray-300 group-hover:text-orange-400 shrink-0" />
                         }
-                        <span className={`font-medium truncate ${checkedIngredients[idx] ? 'text-green-800 line-through opacity-60' : 'text-gray-700'}`}>
+                        <span className={`font-medium text-left leading-snug break-words ${checkedIngredients[idx] ? 'text-green-800 line-through opacity-60' : 'text-gray-700'}`}>
                           {ing.name}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold text-gray-500 bg-white px-2 py-1 rounded-md whitespace-nowrap ml-2 shadow-sm">
+                      <span className="text-xs sm:text-sm font-bold text-gray-500 bg-white px-2 py-1 rounded-md ml-2 shadow-sm max-w-[160px] sm:max-w-[200px] text-right break-words leading-snug">
                         {ing.amount}
                       </span>
                     </div>
