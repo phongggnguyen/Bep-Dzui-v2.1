@@ -253,22 +253,22 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                     <div 
                       key={idx} 
                       onClick={() => toggleIngredient(idx)}
-                      className={`group flex items-start justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      className={`group grid grid-cols-[auto,1fr] sm:grid-cols-[auto,1fr,auto] gap-x-3 gap-y-2 p-3 sm:p-4 rounded-xl border transition-all cursor-pointer select-none ${
                         checkedIngredients[idx] 
-                          ? 'bg-green-50 border-green-100' 
-                          : 'bg-gray-50/50 border-transparent hover:bg-orange-50 hover:border-orange-100'
+                          ? 'bg-green-50 border-green-100 shadow-[0_8px_24px_-14px_rgba(16,185,129,0.6)]' 
+                          : 'bg-white border-gray-100 hover:bg-orange-50/60 hover:border-orange-100 shadow-[0_10px_30px_-22px_rgba(0,0,0,0.25)]'
                       }`}
                     >
-                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="flex items-start gap-3 min-w-0 col-span-2 sm:col-span-1">
                         {checkedIngredients[idx] 
                           ? <CheckCircle2 size={20} className="text-green-500 shrink-0" /> 
                           : <Circle size={20} className="text-gray-300 group-hover:text-orange-400 shrink-0" />
                         }
-                        <span className={`font-medium text-left leading-snug break-words ${checkedIngredients[idx] ? 'text-green-800 line-through opacity-60' : 'text-gray-700'}`}>
+                        <span className={`font-semibold text-left leading-snug break-words text-base ${checkedIngredients[idx] ? 'text-green-800 line-through opacity-60' : 'text-gray-800'}`}>
                           {ing.name}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold text-gray-500 bg-white px-2 py-1 rounded-md ml-2 shadow-sm max-w-[160px] sm:max-w-[200px] text-right break-words leading-snug">
+                      <span className="text-xs sm:text-sm font-bold text-gray-600 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-gray-100 sm:border-transparent w-full sm:w-auto sm:ml-2 sm:justify-self-end sm:self-start sm:shrink-0 col-span-2 sm:col-auto max-w-full sm:max-w-[220px] text-left sm:text-right break-words leading-snug">
                         {ing.amount}
                       </span>
                     </div>
