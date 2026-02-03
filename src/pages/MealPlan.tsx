@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { CalendarDays, ShoppingCart, RefreshCw, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarDays, ShoppingCart, RefreshCw, Loader2, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { generateMealPlan, generateShoppingList } from '@/services/geminiService';
 import { UserProfile, DailyPlan, ShoppingItem } from '@/types';
 import { Link } from 'react-router-dom';
+import { MealPlanStorage } from '@/utils/storage';
 
 export default function MealPlanPage({ user }: { user: UserProfile }) {
-  const [plan, setPlan] = useState<DailyPlan[]>([]);
-  const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([]);
+  // Lazy initialization from localStorage
+  const [plan, setPlan] = useState<DailyPlan[]>(() => MealPlanStorage.loadPlan());
+  const [shoppingList, setShoppingList] = useState<ShoppingItem[]>(() => MealPlanStorage.loadShoppingList());
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<'plan' | 'shopping'>('plan');
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
@@ -14,9 +16,11 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
   const createPlan = async () => {
     setLoading(true);
     setShoppingList([]); // reset shopping list when new plan created
+    MealPlanStorage.clearShoppingList(); // clear from storage too
     try {
       const newPlan = await generateMealPlan(user);
       setPlan(newPlan);
+      MealPlanStorage.savePlan(newPlan); // persist to localStorage
     } catch (error) {
       alert("Không thể tạo thực đơn. Vui lòng thử lại.");
     } finally {
@@ -30,11 +34,21 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
     try {
       const list = await generateShoppingList(plan);
       setShoppingList(list);
+      MealPlanStorage.saveShoppingList(list); // persist to localStorage
       setView('shopping');
     } catch (error) {
       alert("Lỗi tạo danh sách mua sắm.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const clearAll = () => {
+    if (confirm('Bạn có chắc muốn xóa toàn bộ thực đơn không?')) {
+      setPlan([]);
+      setShoppingList([]);
+      MealPlanStorage.clearAll();
+      setView('plan');
     }
   };
 
@@ -60,6 +74,15 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
           >
             Đi chợ
           </button>
+          {plan.length > 0 && (
+            <button
+              onClick={clearAll}
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center gap-2"
+            >
+              <Trash2 size={16} />
+              <span className="hidden sm:inline">Xóa</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -113,12 +136,14 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
             </div>
           ))}
 
-          <button
-            onClick={createShoppingList}
-            className="w-full mt-6 bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-700 flex justify-center items-center gap-2"
-          >
-            <ShoppingCart size={20} /> Tạo danh sách đi chợ
-          </button>
+          {shoppingList.length === 0 && (
+            <button
+              onClick={createShoppingList}
+              className="w-full mt-6 bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-green-700 flex justify-center items-center gap-2"
+            >
+              <ShoppingCart size={20} /> Tạo danh sách đi chợ
+            </button>
+          )}
         </div>
       )}
 
@@ -131,8 +156,14 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
 
           {shoppingList.length === 0 ? (
             <div className="text-center py-8">
-              <Loader2 className="animate-spin mx-auto text-green-500" />
-              <p className="text-gray-500 text-sm mt-2">Đang tổng hợp nguyên liệu...</p>
+              <ShoppingCart size={40} className="mx-auto text-gray-300 mb-4" />
+              <p className="text-gray-500 text-sm mb-4">Chưa có danh sách mua sắm.</p>
+              <button
+                onClick={() => { setView('plan'); }}
+                className="text-green-600 font-medium hover:underline"
+              >
+                ← Về tab Thực đơn để tạo danh sách
+              </button>
             </div>
           ) : (
             <div className="space-y-6">
