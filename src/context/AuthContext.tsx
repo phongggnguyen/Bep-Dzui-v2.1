@@ -84,38 +84,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
+      try {
+        setCurrentUser(user);
 
-      if (user) {
-        setIsGuest(false);
-        persistGuestProfile(null);
-
-        const userDocRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(userDocRef);
-
-        if (docSnap.exists()) {
-          setUserProfile(docSnap.data() as UserProfile);
-        } else {
-          // Create default profile for existing users who don't have one yet (migration)
-          const migrationProfile: UserProfile = {
-            ...defaultProfile,
-            name: user.email?.split('@')[0] || 'User',
-            email: user.email || '',
-          };
-          await setDoc(userDocRef, migrationProfile);
-          setUserProfile(migrationProfile);
-        }
-      } else {
-        const guestProfile = loadGuestProfile();
-        if (guestProfile) {
-          setIsGuest(true);
-          setUserProfile(guestProfile);
-        } else {
+        if (user) {
           setIsGuest(false);
-          setUserProfile(null);
+          persistGuestProfile(null);
+
+          const userDocRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(userDocRef);
+
+          if (docSnap.exists()) {
+            setUserProfile(docSnap.data() as UserProfile);
+          } else {
+            // Create default profile for existing users who don't have one yet (migration)
+            const migrationProfile: UserProfile = {
+              ...defaultProfile,
+              name: user.email?.split('@')[0] || 'User',
+              email: user.email || '',
+            };
+            await setDoc(userDocRef, migrationProfile);
+            setUserProfile(migrationProfile);
+          }
+        } else {
+          const guestProfile = loadGuestProfile();
+          if (guestProfile) {
+            setIsGuest(true);
+            setUserProfile(guestProfile);
+          } else {
+            setIsGuest(false);
+            setUserProfile(null);
+          }
         }
+      } catch (err) {
+        console.error('Auth state change error:', err);
+        setError('Lỗi kết nối. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
@@ -136,9 +142,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err: any) {
       const vietnameseError = getVietnameseErrorMessage(err);
       setError(vietnameseError);
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
   };
 
@@ -150,9 +155,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err: any) {
       const vietnameseError = getVietnameseErrorMessage(err);
       setError(vietnameseError);
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
   };
 
@@ -181,9 +185,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err: any) {
       const vietnameseError = getVietnameseErrorMessage(err);
       setError(vietnameseError);
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
   };
 
@@ -255,7 +258,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {loading ? (
+        <div className="flex justify-center items-center h-screen bg-[#FFF7ED]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Đang tải...</p>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

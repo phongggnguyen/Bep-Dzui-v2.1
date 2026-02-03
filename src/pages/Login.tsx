@@ -1,6 +1,6 @@
 // pages/Login.tsx
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthLayout from '@/components/AuthLayout';
 import AuthInput from '@/components/AuthInput';
@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
-  const { login, loginWithGoogle, resetPassword, error, currentUser, loading, continueAsGuest } = useAuth();
+  const { login, loginWithGoogle, resetPassword, error, currentUser, loading, continueAsGuest, isGuest } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -60,9 +60,11 @@ const Login: React.FC = () => {
     navigate(from, { replace: true });
   };
 
-  if (currentUser && !loading) {
-    navigate('/');
-    return null;
+  // Redirect authenticated users away from login page
+  const from = location.state?.from?.pathname || '/';
+
+  if ((currentUser || isGuest) && !loading) {
+    return <Navigate to={from} replace />;
   }
 
   // Forgot Password View
