@@ -220,3 +220,69 @@ export const generateShoppingList = async (mealPlan: DailyPlan[]): Promise<Shopp
     throw error;
   }
 };
+// --- 5. Recipe Remix Logic ---
+
+// Helper to create a chat session specifically for remixing
+export const createRemixChat = (recipeName: string) => {
+  const model = "gemini-2.5-flash";
+  return ai.chats.create({
+    model,
+    config: {
+      systemInstruction: `
+        Bạn là "Bếp Phó Dzui" chuyên giúp chỉnh sửa công thức nấu ăn.
+        Đang thảo luận về món: "${recipeName}".
+        
+        Nhiệm vụ:
+        1. Lắng nghe yêu cầu thay đổi của người dùng (ví dụ: "thêm cay", "đổi thịt heo thành gà", "nấu nhanh hơn").
+        2. Tư vấn ngắn gọn về ảnh hưởng của thay đổi (vị, dinh dưỡng).
+        3. Luôn giữ thái độ vui vẻ, khuyến khích.
+        
+        Phong cách: Ngắn gọn, súc tích, tập trung vào việc sửa món ăn.
+      `,
+    }
+  });
+};
+
+// Generate the new recipe JSON based on chat history
+export const remixRecipe = async (originalRecipe: Recipe, userRequest: string): Promise<Recipe> => {
+  const model = "gemini-2.5-flash";
+
+  const prompt = `
+    Dựa trên công thức gốc và yêu cầu thay đổi của người dùng, hãy viết lại công thức mới.
+    
+    Công thức gốc: ${JSON.stringify(originalRecipe)}
+    
+    Yêu cầu chỉnh sửa (User Request): "${userRequest}"
+    
+    Yêu cầu đầu ra:
+    - Giữ nguyên cấu trúc JSON.
+    - Thay đổi tên món nếu cần (ví dụ: "Gà kho gừng" -> "Gà kho gừng (Phiên bản cay)").
+    - Cập nhật nguyên liệu, các bước, và cả thông tin dinh dưỡng (healthInfo) cho phù hợp với thay đổi.
+    - Đảm bảo logic nấu ăn hợp lý.
+    
+    Trả về JSON chuẩn của Recipe:
+    {
+      "name": "...",
+      "description": "...",
+      "ingredients": [...],
+      "steps": [...],
+      "cookingTime": "...",
+      "difficulty": "...",
+      "healthInfo": { ... }
+    }
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model,
+      contents: prompt,
+      config: { responseMimeType: "application/json" }
+    });
+
+    const text = response.text || "{}";
+    return JSON.parse(cleanJsonString(text));
+  } catch (error) {
+    console.error("Lỗi remix công thức:", error);
+    throw error;
+  }
+};

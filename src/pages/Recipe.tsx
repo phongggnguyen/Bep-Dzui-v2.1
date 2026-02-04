@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed, HeartPulse, Info, Activity, Dumbbell, Save, History, BookmarkPlus } from 'lucide-react';
-import { generateRecipe } from '@/services/geminiService';
+import { Search, Clock, Gauge, Flame, Loader2, ChefHat, ArrowRight, CheckCircle2, Circle, UtensilsCrossed, HeartPulse, Info, Activity, Dumbbell, Save, History, BookmarkPlus, Sparkles } from 'lucide-react';
+import { generateRecipe, remixRecipe } from '@/services/geminiService';
 import { UserProfile, Recipe, SavedRecipe } from '@/types';
 import { saveRecipe } from '@/services/recipeService';
 import { useAuth } from '@/context/AuthContext';
 import RecipeHistory from '@/components/RecipeHistory';
+import RecipeRemixChat from '@/components/RecipeRemixChat';
 
 export default function RecipePage({ user }: { user: UserProfile }) {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
   const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
   const [saving, setSaving] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showRemix, setShowRemix] = useState(false);
+  const [isRemixing, setIsRemixing] = useState(false);
 
   // Mobile Tab State: 'ingredients' or 'steps'
   const [activeTab, setActiveTab] = useState<'ingredients' | 'steps'>('ingredients');
@@ -73,6 +76,24 @@ export default function RecipePage({ user }: { user: UserProfile }) {
     setActiveTab('ingredients');
   };
 
+  const handleRemix = async (request: string) => {
+    if (!recipe) return;
+    setShowRemix(false);
+    setIsRemixing(true);
+    try {
+      // Optimistic update or just showing loading state
+      const newRecipe = await remixRecipe(recipe, request);
+      setRecipe(newRecipe);
+      setCheckedIngredients({}); // Reset checks for new recipe
+      alert('Đã remix công thức thành công! 🎉');
+    } catch (error) {
+      console.error(error);
+      alert('Remix thất bại. Bạn thử lại nhé!');
+    } finally {
+      setIsRemixing(false);
+    }
+  };
+
   return (
     <div className="pb-24 sm:pb-10">
       <div className="mb-6 sm:mb-8 px-2 sm:px-0 flex items-center justify-between">
@@ -85,8 +106,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
         <button
           onClick={() => setShowHistory(!showHistory)}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all ${showHistory
-              ? 'bg-orange-500 text-white shadow-lg'
-              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+            ? 'bg-orange-500 text-white shadow-lg'
+            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
         >
           <History size={18} />
@@ -144,12 +165,24 @@ export default function RecipePage({ user }: { user: UserProfile }) {
       {recipe && !loading && (
         <div className="animate-fade-in-up space-y-6 px-2 sm:px-0">
 
-          {/* Save Recipe Button */}
-          {currentUser && (
-            <div className="flex justify-end">
+          {/* Action Buttons Row */}
+          <div className="flex flex-wrap justify-end gap-3">
+            {/* REMIX BUTTON */}
+            <button
+              onClick={() => setShowRemix(true)}
+              disabled={saving || isRemixing}
+              className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-purple-200 hover:shadow-xl transition-all disabled:opacity-50"
+            >
+              <Sparkles size={18} />
+              <span className="hidden sm:inline">Bếp Phó Remix</span>
+              <span className="sm:hidden">Remix</span>
+            </button>
+
+            {/* SAVE BUTTON */}
+            {currentUser && (
               <button
                 onClick={handleSaveRecipe}
-                disabled={saving}
+                disabled={saving || isRemixing}
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-semibold shadow-lg shadow-green-200 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
@@ -164,8 +197,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                   </>
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Header Card - Compact on Mobile */}
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-8 shadow-sm border border-orange-100">
@@ -215,8 +248,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
               <button
                 onClick={() => setActiveTab('ingredients')}
                 className={`flex-1 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'ingredients'
-                    ? 'bg-green-50 text-green-700 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
+                  ? 'bg-green-50 text-green-700 shadow-sm'
+                  : 'text-gray-400 hover:text-gray-600'
                   }`}
               >
                 <UtensilsCrossed size={16} />
@@ -225,8 +258,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
               <button
                 onClick={() => setActiveTab('steps')}
                 className={`flex-1 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'steps'
-                    ? 'bg-orange-50 text-orange-700 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
+                  ? 'bg-orange-50 text-orange-700 shadow-sm'
+                  : 'text-gray-400 hover:text-gray-600'
                   }`}
               >
                 <Flame size={16} />
@@ -251,8 +284,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                       key={idx}
                       onClick={() => toggleIngredient(idx)}
                       className={`group grid grid-cols-[auto,1fr] sm:grid-cols-[auto,1fr,auto] gap-x-3 gap-y-2 p-3 sm:p-4 rounded-xl border transition-all cursor-pointer select-none ${checkedIngredients[idx]
-                          ? 'bg-green-50 border-green-100 shadow-[0_8px_24px_-14px_rgba(16,185,129,0.6)]'
-                          : 'bg-white border-gray-100 hover:bg-orange-50/60 hover:border-orange-100 shadow-[0_10px_30px_-22px_rgba(0,0,0,0.25)]'
+                        ? 'bg-green-50 border-green-100 shadow-[0_8px_24px_-14px_rgba(16,185,129,0.6)]'
+                        : 'bg-white border-gray-100 hover:bg-orange-50/60 hover:border-orange-100 shadow-[0_10px_30px_-22px_rgba(0,0,0,0.25)]'
                         }`}
                     >
                       <div className="flex items-start gap-3 min-w-0 col-span-2 sm:col-span-1">
@@ -331,13 +364,13 @@ export default function RecipePage({ user }: { user: UserProfile }) {
                     {/* Score Circle */}
                     <div className="flex flex-col items-center mb-8">
                       <div className={`relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-[6px] flex items-center justify-center ${recipe.healthInfo.healthScore >= 80 ? 'border-green-500' :
-                          recipe.healthInfo.healthScore >= 60 ? 'border-yellow-500' :
-                            recipe.healthInfo.healthScore >= 40 ? 'border-orange-500' : 'border-red-500'
+                        recipe.healthInfo.healthScore >= 60 ? 'border-yellow-500' :
+                          recipe.healthInfo.healthScore >= 40 ? 'border-orange-500' : 'border-red-500'
                         }`}>
                         <div className="text-center">
                           <div className={`text-5xl sm:text-6xl font-black ${recipe.healthInfo.healthScore >= 80 ? 'text-green-500' :
-                              recipe.healthInfo.healthScore >= 60 ? 'text-yellow-500' :
-                                recipe.healthInfo.healthScore >= 40 ? 'text-orange-500' : 'text-red-500'
+                            recipe.healthInfo.healthScore >= 60 ? 'text-yellow-500' :
+                              recipe.healthInfo.healthScore >= 40 ? 'text-orange-500' : 'text-red-500'
                             }`}>
                             {recipe.healthInfo.healthScore}
                           </div>
@@ -347,8 +380,8 @@ export default function RecipePage({ user }: { user: UserProfile }) {
 
                       {/* Score Label */}
                       <p className={`mt-4 font-bold text-center ${recipe.healthInfo.healthScore >= 80 ? 'text-green-700' :
-                          recipe.healthInfo.healthScore >= 60 ? 'text-yellow-700' :
-                            recipe.healthInfo.healthScore >= 40 ? 'text-orange-700' : 'text-red-700'
+                        recipe.healthInfo.healthScore >= 60 ? 'text-yellow-700' :
+                          recipe.healthInfo.healthScore >= 40 ? 'text-orange-700' : 'text-red-700'
                         }`}>
                         {recipe.healthInfo.healthScore >= 80 ? 'Rất phù hợp với mục tiêu' :
                           recipe.healthInfo.healthScore >= 60 ? 'Tốt cho sức khỏe' :
@@ -433,6 +466,27 @@ export default function RecipePage({ user }: { user: UserProfile }) {
               </div>
             </div>
           )}
+        </div>
+      )}
+      {/* Remix Chat Modal */}
+      {showRemix && recipe && (
+        <RecipeRemixChat
+          recipe={recipe}
+          onClose={() => setShowRemix(false)}
+          onRemix={handleRemix}
+        />
+      )}
+
+      {/* Remix Loading Overlay */}
+      {isRemixing && (
+        <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-white/80 backdrop-blur-md">
+          <div className="bg-white p-6 rounded-3xl shadow-2xl border border-purple-100 flex flex-col items-center text-center max-w-sm animate-bounce-slow">
+            <div className="bg-purple-100 p-4 rounded-full mb-4">
+              <Sparkles size={40} className="text-purple-600 animate-spin-slow" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Đang chế biến lại...</h3>
+            <p className="text-gray-500">Bếp Phó đang điều chỉnh công thức theo ý bạn.</p>
+          </div>
         </div>
       )}
     </div>
