@@ -5,23 +5,38 @@ import { Save, Pencil } from 'lucide-react';
 
 interface ProfileProps {
   currentProfile: UserProfile;
-  onSave: (profile: UserProfile) => void;
+  onSave: (profile: UserProfile) => Promise<void>;
 }
 
 export default function ProfilePage({ currentProfile, onSave }: ProfileProps) {
   const [profile, setProfile] = useState<UserProfile>(currentProfile);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Sync state with props when context updates (e.g. initial load complete)
+  React.useEffect(() => {
+    setProfile(currentProfile);
+  }, [currentProfile]);
 
   const handleChange = (field: keyof UserProfile, value: any) => {
     setProfile(prev => ({ ...prev, [field]: value }));
     setSaved(false);
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(profile);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setError(null);
+    try {
+      console.log('Saving profile:', profile);
+      await onSave(profile);
+      console.log('Profile saved successfully');
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      console.error('Profile save error:', err);
+      setError(err?.message || 'Lỗi khi lưu. Vui lòng thử lại.');
+    }
   };
 
   const predefinedGoals = [
@@ -60,8 +75,8 @@ export default function ProfilePage({ currentProfile, onSave }: ProfileProps) {
                 type="button"
                 onClick={() => handleChange('goal', opt.id)}
                 className={`p-3 rounded-xl text-sm font-medium border transition-all ${profile.goal === opt.id
-                    ? 'bg-orange-50 border-orange-500 text-orange-700'
-                    : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                  ? 'bg-orange-50 border-orange-500 text-orange-700'
+                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                   }`}
               >
                 {opt.label}
@@ -71,8 +86,8 @@ export default function ProfilePage({ currentProfile, onSave }: ProfileProps) {
               type="button"
               onClick={() => { if (isPredefined) handleChange('goal', ''); }}
               className={`p-3 rounded-xl text-sm font-medium border transition-all flex items-center justify-center gap-2 ${!isPredefined
-                  ? 'bg-orange-50 border-orange-500 text-orange-700'
-                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                ? 'bg-orange-50 border-orange-500 text-orange-700'
+                : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                 }`}
             >
               <Pencil size={16} /> Khác
@@ -132,6 +147,11 @@ export default function ProfilePage({ currentProfile, onSave }: ProfileProps) {
           <Save size={20} /> Lưu thiết lập
         </button>
 
+        {error && (
+          <p className="text-red-500 text-center text-sm font-medium animate-pulse">
+            {error}
+          </p>
+        )}
         {saved && (
           <p className="text-green-600 text-center text-sm font-medium animate-bounce">
             Đã lưu thành công!

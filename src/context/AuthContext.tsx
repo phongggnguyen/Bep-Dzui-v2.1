@@ -226,17 +226,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const saveProfile = async (profile: UserProfile) => {
+    console.log('saveProfile called, isGuest:', isGuest, 'currentUser:', currentUser?.uid);
+
     if (isGuest) {
       setUserProfile(profile);
       persistGuestProfile(profile);
+      console.log('Guest profile saved to localStorage');
       return;
     }
 
     if (currentUser) {
       const userDocRef = doc(db, 'users', currentUser.uid);
-      await setDoc(userDocRef, profile, { merge: true });
+
+      // Sanitize profile to remove undefined values (Firestore rejects them)
+      const cleanProfile = Object.fromEntries(
+        Object.entries(profile).filter(([_, v]) => v !== undefined)
+      );
+
+      console.log('Saving to Firestore:', cleanProfile);
+      await setDoc(userDocRef, cleanProfile, { merge: true });
       setUserProfile(profile);
+      console.log('Profile saved to Firestore successfully');
     } else {
+      console.error('No currentUser available for save');
       throw new Error('Khong co nguoi dung dang nhap de luu ho so.');
     }
   };

@@ -79,6 +79,7 @@ export default function App() {
       await authSaveProfile(profile);
     } catch (error) {
       console.error('Failed to save profile:', error);
+      throw error; // Re-throw to let component handle UI feedback
     }
   };
 
