@@ -12,8 +12,8 @@ const cleanJsonString = (text: string): string => {
 
 // --- NEW: Chat Assistant ---
 export const createSousChefChat = () => {
-  const model = "gemini-2.5-flash";
-
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
   return ai.chats.create({
     model,
     config: {
@@ -37,7 +37,8 @@ export const createSousChefChat = () => {
 
 // --- 1. Analyze Image ---
 export const analyzeImage = async (base64Image: string): Promise<AnalyzedDish> => {
-  const model = "gemini-2.5-flash"; // Use Flash for Vision
+  // const model = "gemini-2.5-flash"; // Use Flash for Vision
+  const model = "gemini-3-flash-preview";
 
   const prompt = `
     Bạn là một chuyên gia ẩm thực Việt Nam. Hãy nhìn bức ảnh món ăn này và phân tích nó.
@@ -73,7 +74,8 @@ export const analyzeImage = async (base64Image: string): Promise<AnalyzedDish> =
 
 // --- 2. Generate Recipe ---
 export const generateRecipe = async (query: string, userProfile: UserProfile): Promise<Recipe> => {
-  const model = "gemini-2.5-flash";
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
 
   const restrictions = `
     Lưu ý người dùng (BẮT BUỘC TUÂN THỦ):
@@ -139,7 +141,8 @@ export const generateRecipe = async (query: string, userProfile: UserProfile): P
 // --- 3. Generate Meal Plan ---
 export const generateMealPlan = async (userProfile: UserProfile): Promise<DailyPlan[]> => {
   // Use Pro for complex reasoning over 7 days to avoid repetition
-  const model = "gemini-2.5-flash";
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
 
   const prompt = `
     Lập thực đơn 7 ngày cho người Việt Nam.
@@ -187,7 +190,8 @@ export const generateMealPlan = async (userProfile: UserProfile): Promise<DailyP
 
 // --- 4. Generate Shopping List ---
 export const generateShoppingList = async (mealPlan: DailyPlan[]): Promise<ShoppingItem[]> => {
-  const model = "gemini-2.5-flash";
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
 
   const prompt = `
     Dựa trên thực đơn 7 ngày sau đây, hãy tạo danh sách đi chợ gộp (Shopping List).
@@ -224,7 +228,8 @@ export const generateShoppingList = async (mealPlan: DailyPlan[]): Promise<Shopp
 
 // Helper to create a chat session specifically for remixing
 export const createRemixChat = (recipeName: string) => {
-  const model = "gemini-2.5-flash";
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
   return ai.chats.create({
     model,
     config: {
@@ -245,7 +250,8 @@ export const createRemixChat = (recipeName: string) => {
 
 // Generate the new recipe JSON based on chat history
 export const remixRecipe = async (originalRecipe: Recipe, userRequest: string): Promise<Recipe> => {
-  const model = "gemini-2.5-flash";
+  // const model = "gemini-2.5-flash";
+  const model = "gemini-3-flash-preview";
 
   const prompt = `
     Dựa trên công thức gốc và yêu cầu thay đổi của người dùng, hãy viết lại công thức mới.
