@@ -92,8 +92,16 @@ export default function App() {
             <span>Bếp Dzui</span>
           </div>
           {(currentUser || isGuest) && (
-            <div className="w-8 h-8 rounded-full bg-orange-100 overflow-hidden border-2 border-white shadow-sm">
-              <div className="w-full h-full flex items-center justify-center text-orange-500 font-bold text-xs">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={logout}
+                className="p-2.5 rounded-xl text-orange-600 bg-orange-50 hover:bg-orange-100 active:scale-95 transition-all duration-200 border border-orange-100/50 shadow-sm flex items-center justify-center"
+                aria-label="Đăng xuất"
+                title="Đăng xuất"
+              >
+                <LogOut size={18} />
+              </button>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md border-2 border-white">
                 {userProfile.name.charAt(0).toUpperCase()}
               </div>
             </div>
