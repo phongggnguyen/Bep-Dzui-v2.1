@@ -54,6 +54,25 @@ const BepDzuiLogo = ({ size = 32, className = '' }: { size?: number; className?:
   </svg>
 );
 
+// --- CUSTOM LOGOUT ICON ---
+const LogoutIcon = ({ size = 20, className = '' }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" y1="12" x2="9" y2="12" />
+  </svg>
+);
+
 // --- PROTECTED ROUTE COMPONENT ---
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { currentUser, loading, isGuest } = useAuth();
@@ -99,7 +118,7 @@ export default function App() {
                 aria-label="Đăng xuất"
                 title="Đăng xuất"
               >
-                <LogOut size={18} />
+                <LogoutIcon size={18} />
               </button>
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md border-2 border-white">
                 {userProfile.name.charAt(0).toUpperCase()}
@@ -136,9 +155,9 @@ export default function App() {
                   <NavButton to="/profile" icon={<User size={20} />} label="Hồ sơ cá nhân hóa" />
                   <button
                     onClick={logout}
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group text-gray-600 hover:bg-red-50 hover:text-red-600"
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group text-gray-600 hover:bg-orange-50 hover:text-orange-600"
                   >
-                    <LogOut size={20} />
+                    <LogoutIcon size={20} />
                     <span className="font-medium">Đăng xuất</span>
                   </button>
                 </>
