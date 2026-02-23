@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { HashRouter as Router, Routes, Route, NavLink, Link, useLocation, Navigate } from 'react-router-dom';
-import { Home, Camera, ChefHat, CalendarDays, User, LogOut, LogIn } from 'lucide-react';
+import { Home, Camera, ChefHat, CalendarDays, User, LogOut, LogIn, Info } from 'lucide-react';
 
 // Page Imports
 import HomePage from '@/pages/Home';
@@ -10,6 +10,7 @@ import MealPlanPage from '@/pages/MealPlan';
 import ProfilePage from '@/pages/Profile';
 import LoginPage from '@/pages/Login';
 import SignupPage from '@/pages/Signup';
+import AboutPage from '@/pages/About';
 
 import { UserProfile } from '@/types';
 import SousChefChat from '@/components/SousChefChat';
@@ -149,6 +150,7 @@ export default function App() {
               <NavButton to="/analyze" icon={<Camera size={20} />} label="Scan món ăn" />
               <NavButton to="/recipe" icon={<ChefHat size={20} />} label="Tạo công thức" />
               {(currentUser || isGuest) && <NavButton to="/meal-plan" icon={<CalendarDays size={20} />} label="Thực đơn tuần" />}
+              <NavButton to="/about" icon={<Info size={20} />} label="Về chúng tôi" />
 
               <div className="my-2 border-t border-gray-100"></div>
 
@@ -195,6 +197,9 @@ export default function App() {
                 <Route path="/recipe" element={<ProtectedRoute><RecipePage user={userProfile} /></ProtectedRoute>} />
                 <Route path="/meal-plan" element={<ProtectedRoute><MealPlanPage user={userProfile} /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><ProfilePage currentProfile={userProfile} onSave={saveProfile} /></ProtectedRoute>} />
+
+                {/* About Page */}
+                <Route path="/about" element={<AboutPage />} />
               </Routes>
             </div>
           </main>

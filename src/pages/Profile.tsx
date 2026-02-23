@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { UserProfile } from '@/types';
-import { Save, Pencil } from 'lucide-react';
+import { Save, Pencil, Info, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ProfileProps {
   currentProfile: UserProfile;
@@ -158,6 +159,25 @@ export default function ProfilePage({ currentProfile, onSave }: ProfileProps) {
           </p>
         )}
       </form>
+
+      {/* Thông tin thêm (đặc biệt cho Mobile) */}
+      <div className="mt-8 bg-white rounded-3xl p-6 sm:p-8 shadow-sm">
+        <h2 className="text-lg font-bold text-gray-800 mb-4">Thông tin khác</h2>
+        <div className="space-y-2">
+          <Link
+            to="/about"
+            className="flex items-center justify-between p-4 rounded-xl hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-colors border border-gray-100 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-100 rounded-lg text-orange-600 group-hover:bg-orange-200 transition-colors">
+                <Info size={20} />
+              </div>
+              <span className="font-medium">Về Bếp Dzui & Liên hệ</span>
+            </div>
+            <ChevronRight size={20} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
