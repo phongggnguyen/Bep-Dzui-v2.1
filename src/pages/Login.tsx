@@ -229,7 +229,7 @@ const Login: React.FC = () => {
             </svg>
           }
         >
-          Dang nhap voi Google
+          Đăng nhập với Google
         </AuthButton>
 
         <AuthButton
@@ -238,7 +238,7 @@ const Login: React.FC = () => {
           loading={loading}
           variant="outline"
         >
-          Dung thu voi tu cach khach
+          Dùng thử với tư cách khách
         </AuthButton>
 
         {/* Sign up link */}
