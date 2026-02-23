@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { HashRouter as Router, Routes, Route, NavLink, useLocation, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, NavLink, Link, useLocation, Navigate } from 'react-router-dom';
 import { Home, Camera, ChefHat, CalendarDays, User, LogOut, LogIn } from 'lucide-react';
 
 // Page Imports
@@ -106,10 +106,10 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-[#FFF7ED] text-gray-800 font-sans pb-24 sm:pb-0 selection:bg-orange-200 selection:text-orange-900">
         <header className="sticky top-0 z-20 sm:hidden px-6 py-4 bg-white/80 backdrop-blur-md border-b border-orange-100 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-orange-600 font-bold text-2xl tracking-tight">
+          <Link to="/" className="flex items-center gap-2 text-orange-600 font-bold text-2xl tracking-tight hover:opacity-80 transition-opacity">
             <BepDzuiLogo size={36} />
             <span>Bếp Dzui</span>
-          </div>
+          </Link>
           {(currentUser || isGuest) && (
             <div className="flex items-center gap-2">
               <button
@@ -129,16 +129,19 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto sm:flex min-h-screen">
           <aside className="hidden sm:flex flex-col w-72 h-screen sticky top-0 p-6">
-            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 shadow-sm mb-6 border border-white/50">
+            <Link
+              to="/"
+              className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 shadow-sm mb-6 border border-white/50 block group hover:bg-white/80 transition-all duration-300"
+            >
               <div className="flex items-center gap-3 text-orange-600 font-extrabold text-2xl tracking-tight">
-                <div className="relative">
+                <div className="relative group-hover:scale-105 transition-transform duration-300">
                   <div className="absolute inset-0 bg-orange-200 blur-xl opacity-30 rounded-full"></div>
                   <BepDzuiLogo size={48} className="relative z-10" />
                 </div>
                 <span>Bếp Dzui</span>
               </div>
               <p className="text-xs text-gray-500 mt-2 font-medium pl-1">Trợ lý nấu ăn AI</p>
-            </div>
+            </Link>
 
             <nav className="flex-1 flex flex-col gap-3 bg-white/60 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/50 overflow-y-auto">
               <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Menu</div>
