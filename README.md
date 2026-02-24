@@ -8,6 +8,15 @@
 
 ---
 
+## 📸 Hình ảnh minh họa
+
+| ![img1](docs/assets/img1.png) | ![img2](docs/assets/img2.png) |
+| :---: | :---: |
+| ![img3](docs/assets/img3.png) | ![img4](docs/assets/img4.png) |
+| ![img5](docs/assets/img5.png) | |
+
+---
+
 ## 🛠️ Công nghệ sử dụng
 
 Dự án được xây dựng trên nền tảng công nghệ hiện đại, tối ưu cho hiệu năng và trải nghiệm người dùng:
