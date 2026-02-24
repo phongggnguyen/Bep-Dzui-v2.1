@@ -22,7 +22,7 @@ const AuthButton: React.FC<AuthButtonProps> = ({
     transition-all duration-300
     flex items-center justify-center gap-2
     disabled:cursor-not-allowed disabled:opacity-50
-    focus:outline-none focus:ring-4 focus:ring-orange-200
+    focus:outline-none focus:ring-4 focus:ring-orange-200 dark:focus:ring-orange-900
     relative overflow-hidden group
   `;
 
@@ -31,18 +31,18 @@ const AuthButton: React.FC<AuthButtonProps> = ({
       bg-gradient-to-r from-orange-500 to-orange-600
       hover:from-orange-600 hover:to-orange-700
       active:scale-95
-      text-white shadow-lg shadow-orange-200
-      hover:shadow-xl hover:shadow-orange-300
+      text-white shadow-lg shadow-orange-200 dark:shadow-orange-900/30
+      hover:shadow-xl hover:shadow-orange-300 dark:hover:shadow-orange-900/50
     `,
     secondary: `
-      bg-gray-100 hover:bg-gray-200
-      text-gray-700
+      bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
+      text-gray-700 dark:text-gray-300
       active:scale-95
     `,
     outline: `
-      bg-transparent border-2 border-gray-300
-      hover:border-orange-500 hover:bg-orange-50
-      text-gray-700 hover:text-orange-600
+      bg-transparent border-2 border-gray-300 dark:border-gray-600
+      hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/30
+      text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
       active:scale-95
     `
   };

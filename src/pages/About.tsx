@@ -6,18 +6,18 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-20">
 
             {/* Hero Header */}
-            <section className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-[2.5rem] p-8 sm:p-12 text-center border border-orange-100 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200 rounded-full blur-[80px] opacity-40 -translate-y-1/2 translate-x-1/3"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-200 rounded-full blur-[80px] opacity-40 translate-y-1/2 -translate-x-1/3"></div>
+            <section className="bg-gradient-to-br from-orange-50 dark:from-orange-950/40 to-pink-50 dark:to-pink-950/20 rounded-[2.5rem] p-8 sm:p-12 text-center border border-orange-100 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200 dark:bg-orange-900/30 rounded-full blur-[80px] opacity-40 -translate-y-1/2 translate-x-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-200 dark:bg-pink-900/30 rounded-full blur-[80px] opacity-40 translate-y-1/2 -translate-x-1/3"></div>
 
                 <div className="relative z-10">
-                    <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md border border-orange-100 rotate-3">
+                    <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md border border-orange-100 dark:border-gray-700 rotate-3">
                         <ChefHat size={40} className="text-orange-500" />
                     </div>
-                    <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-800 tracking-tight mb-4">
+                    <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-800 dark:text-gray-100 tracking-tight mb-4">
                         Về <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Bếp Dzui</span>
                     </h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
                         Hành trình xây dựng một trợ lý nấu ăn thông minh, giúp bữa ăn gia đình trở nên dễ dàng, sáng tạo và ngập tràn niềm vui.
                     </p>
                 </div>
@@ -25,16 +25,16 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Câu chuyện */}
-                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="bg-white dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 bg-orange-100 rounded-xl text-orange-600">
+                        <div className="p-3 bg-orange-100 dark:bg-orange-900/40 rounded-xl text-orange-600 dark:text-orange-400">
                             <Heart size={24} />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-800">Câu chuyện</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Câu chuyện</h2>
                     </div>
-                    <p className="text-gray-600 leading-relaxed space-y-4">
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed space-y-4">
                         <span className="block">
-                            Ý tưởng về Bếp Dzui xuất phát từ một câu hỏi quen thuộc mỗi ngày: <strong>"Hôm nay ăn gì?"</strong>. Việc suy nghĩ thực đơn đôi khi còn mệt mỏi hơn cả việc nấu nướng.
+                            Ý tưởng về Bếp Dzui xuất phát từ một câu hỏi quen thuộc mỗi ngày: <strong className="text-gray-800 dark:text-gray-200">"Hôm nay ăn gì?"</strong>. Việc suy nghĩ thực đơn đôi khi còn mệt mỏi hơn cả việc nấu nướng.
                         </span>
                         <span className="block mt-4">
                             Với niềm đam mê ẩm thực và công nghệ, Bếp Dzui ra đời nhằm ứng dụng sức mạnh của AI để giải quyết bài toán đó. Từ nhận diện nguyên liệu trong tủ lạnh đến tự động lên thực đơn cá nhân hóa, Bếp Dzui mong muốn mang lại nguồn cảm hứng nấu nướng cho mọi người.
@@ -43,39 +43,39 @@ export default function AboutPage() {
                 </div>
 
                 {/* Công nghệ */}
-                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="bg-white dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
+                        <div className="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-xl text-blue-600 dark:text-blue-400">
                             <Code size={24} />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-800">Công nghệ</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Công nghệ</h2>
                     </div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
                         Dự án được xây dựng dựa trên các công nghệ web hiện đại, tập trung vào hiệu năng và trải nghiệm người dùng tối ưu:
                     </p>
                     <ul className="space-y-3">
                         <li className="flex items-center gap-3">
                             <Sparkles size={18} className="text-yellow-500 shrink-0" />
-                            <span className="text-gray-700"><strong>AI Engine:</strong> Google Gemini 3.0 Flash Preview</span>
+                            <span className="text-gray-700 dark:text-gray-300"><strong className="text-gray-900 dark:text-gray-100">AI Engine:</strong> Google Gemini 3.0 Flash Preview</span>
                         </li>
                         <li className="flex items-center gap-3">
                             <Sparkles size={18} className="text-blue-500 shrink-0" />
-                            <span className="text-gray-700"><strong>Frontend:</strong> React 18, TypeScript, Vite</span>
+                            <span className="text-gray-700 dark:text-gray-300"><strong className="text-gray-900 dark:text-gray-100">Frontend:</strong> React 18, TypeScript, Vite</span>
                         </li>
                         <li className="flex items-center gap-3">
                             <Sparkles size={18} className="text-cyan-500 shrink-0" />
-                            <span className="text-gray-700"><strong>Styling:</strong> Tailwind CSS v3</span>
+                            <span className="text-gray-700 dark:text-gray-300"><strong className="text-gray-900 dark:text-gray-100">Styling:</strong> Tailwind CSS v3</span>
                         </li>
                         <li className="flex items-center gap-3">
                             <Sparkles size={18} className="text-green-500 shrink-0" />
-                            <span className="text-gray-700"><strong>Backend/Auth:</strong> Supabase (PostgreSQL)</span>
+                            <span className="text-gray-700 dark:text-gray-300"><strong className="text-gray-900 dark:text-gray-100">Backend/Auth:</strong> Firebase (Nosql)</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             {/* Thông tin liên hệ */}
-            <section className="bg-gray-900 rounded-[2rem] p-8 sm:p-12 text-white shadow-lg overflow-hidden relative">
+            <section className="bg-gray-900 dark:bg-gray-800 rounded-[2rem] p-8 sm:p-12 text-white shadow-lg overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500 rounded-full blur-[100px] opacity-20 transition-all"></div>
                 <div className="relative z-10 text-center">
                     <h2 className="text-2xl font-bold mb-2">Kết nối với tác giả</h2>
@@ -85,7 +85,6 @@ export default function AboutPage() {
 
                     <div className="flex flex-wrap justify-center gap-4">
                         <a
-                            // href="mailto:nchd3012@gmail.com"
                             className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl backdrop-blur-md transition-colors border border-white/10 font-medium"
                         >
                             <Mail size={20} />
@@ -93,7 +92,7 @@ export default function AboutPage() {
                         </a>
 
                         <a
-                            href="https://github.com/phongggnguyen"
+                            href="https://github.com/phongggnguyen/Bep-Dzui-v2.1"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl backdrop-blur-md transition-colors border border-white/10 font-medium"
@@ -116,7 +115,7 @@ export default function AboutPage() {
             </section>
 
             {/* Footer text */}
-            <div className="text-center text-gray-400 text-sm mt-8">
+            <div className="text-center text-gray-400 dark:text-gray-500 text-sm mt-8">
                 <p>© 2026 Bếp Dzui. Crafted with ❤️.</p>
             </div>
 

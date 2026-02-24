@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { MealPlanStorage } from '@/utils/storage';
 
 export default function MealPlanPage({ user }: { user: UserProfile }) {
-  // Lazy initialization from localStorage
   const [plan, setPlan] = useState<DailyPlan[]>(() => MealPlanStorage.loadPlan());
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>(() => MealPlanStorage.loadShoppingList());
   const [loading, setLoading] = useState(false);
@@ -15,12 +14,12 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
 
   const createPlan = async () => {
     setLoading(true);
-    setShoppingList([]); // reset shopping list when new plan created
-    MealPlanStorage.clearShoppingList(); // clear from storage too
+    setShoppingList([]);
+    MealPlanStorage.clearShoppingList();
     try {
       const newPlan = await generateMealPlan(user);
       setPlan(newPlan);
-      MealPlanStorage.savePlan(newPlan); // persist to localStorage
+      MealPlanStorage.savePlan(newPlan);
     } catch (error) {
       alert("Không thể tạo thực đơn. Vui lòng thử lại.");
     } finally {
@@ -34,7 +33,7 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
     try {
       const list = await generateShoppingList(plan);
       setShoppingList(list);
-      MealPlanStorage.saveShoppingList(list); // persist to localStorage
+      MealPlanStorage.saveShoppingList(list);
       setView('shopping');
     } catch (error) {
       alert("Lỗi tạo danh sách mua sắm.");
@@ -59,25 +58,25 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Thực đơn 7 ngày</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Thực đơn 7 ngày</h1>
         <div className="flex gap-2">
           <button
             onClick={() => setView('plan')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${view === 'plan' ? 'bg-orange-500 text-white' : 'bg-white text-gray-600'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${view === 'plan' ? 'bg-orange-500 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700'}`}
           >
             Thực đơn
           </button>
           <button
             onClick={() => setView('shopping')}
             disabled={plan.length === 0}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${view === 'shopping' ? 'bg-green-600 text-white' : 'bg-white text-gray-600 disabled:opacity-50'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${view === 'shopping' ? 'bg-green-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 disabled:opacity-50 border border-gray-200 dark:border-gray-700'}`}
           >
             Đi chợ
           </button>
           {plan.length > 0 && (
             <button
               onClick={clearAll}
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center gap-2"
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors flex items-center gap-2"
             >
               <Trash2 size={16} />
               <span className="hidden sm:inline">Xóa</span>
@@ -88,9 +87,9 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
 
       {/* Empty State */}
       {plan.length === 0 && !loading && (
-        <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-          <CalendarDays size={48} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500 mb-6">Chưa có thực đơn cho tuần này.</p>
+        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+          <CalendarDays size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Chưa có thực đơn cho tuần này.</p>
           <button
             onClick={createPlan}
             className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all"
@@ -103,7 +102,7 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
       {loading && (
         <div className="text-center py-20">
           <Loader2 size={40} className="animate-spin mx-auto text-orange-500 mb-4" />
-          <p className="text-gray-600">AI đang tính toán dinh dưỡng...</p>
+          <p className="text-gray-600 dark:text-gray-400">AI đang tính toán dinh dưỡng...</p>
         </div>
       )}
 
@@ -111,18 +110,18 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
       {view === 'plan' && plan.length > 0 && !loading && (
         <div className="space-y-4">
           <div className="flex justify-end mb-2">
-            <button onClick={createPlan} className="text-orange-600 text-sm flex items-center gap-1 hover:underline">
+            <button onClick={createPlan} className="text-orange-600 dark:text-orange-400 text-sm flex items-center gap-1 hover:underline">
               <RefreshCw size={14} /> Tạo lại thực đơn khác
             </button>
           </div>
 
           {plan.map((day, idx) => (
-            <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div key={idx} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
               <button
                 onClick={() => toggleDay(idx)}
-                className="w-full flex justify-between items-center p-4 bg-orange-50/50 hover:bg-orange-50 transition-colors"
+                className="w-full flex justify-between items-center p-4 bg-orange-50/50 dark:bg-orange-950/20 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors"
               >
-                <span className="font-bold text-lg text-gray-800">{day.day}</span>
+                <span className="font-bold text-lg text-gray-800 dark:text-gray-100">{day.day}</span>
                 {expandedDay === idx ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
               </button>
 
@@ -149,18 +148,18 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
 
       {/* Shopping List View */}
       {view === 'shopping' && !loading && (
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-green-100">
-          <h2 className="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-green-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold text-green-700 dark:text-green-400 mb-4 flex items-center gap-2">
             <ShoppingCart /> Danh sách cần mua
           </h2>
 
           {shoppingList.length === 0 ? (
             <div className="text-center py-8">
-              <ShoppingCart size={40} className="mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500 text-sm mb-4">Chưa có danh sách mua sắm.</p>
+              <ShoppingCart size={40} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Chưa có danh sách mua sắm.</p>
               <button
                 onClick={() => { setView('plan'); }}
-                className="text-green-600 font-medium hover:underline"
+                className="text-green-600 dark:text-green-400 font-medium hover:underline"
               >
                 ← Về tab Thực đơn để tạo danh sách
               </button>
@@ -172,12 +171,12 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
                 if (items.length === 0) return null;
                 return (
                   <div key={cat}>
-                    <h3 className="font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">{cat}</h3>
+                    <h3 className="font-bold text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-gray-800 pb-1 mb-2">{cat}</h3>
                     <ul className="space-y-2">
                       {items.map((item, i) => (
-                        <li key={i} className="flex justify-between text-sm text-gray-700">
+                        <li key={i} className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                           <span>{item.name}</span>
-                          <span className="font-medium bg-gray-100 px-2 rounded">{item.amount}</span>
+                          <span className="font-medium bg-gray-100 dark:bg-gray-800 px-2 rounded">{item.amount}</span>
                         </li>
                       ))}
                     </ul>
@@ -187,7 +186,7 @@ export default function MealPlanPage({ user }: { user: UserProfile }) {
 
               <button
                 onClick={() => navigator.clipboard.writeText(JSON.stringify(shoppingList, null, 2))}
-                className="w-full py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 mt-4"
+                className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 mt-4"
               >
                 Sao chép danh sách
               </button>
@@ -203,11 +202,11 @@ const MealRow = ({ type, meal }: { type: string, meal: any }) => (
   <div className="flex gap-3 items-start">
     <div className="w-12 text-sm font-bold text-orange-400 pt-1">{type}</div>
     <div className="flex-1">
-      <div className="font-medium text-gray-800">{meal.dishName}</div>
-      {meal.notes && <div className="text-xs text-gray-500 mt-1">{meal.notes}</div>}
+      <div className="font-medium text-gray-800 dark:text-gray-200">{meal.dishName}</div>
+      {meal.notes && <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{meal.notes}</div>}
       <Link
         to={`/recipe?query=${encodeURIComponent(meal.dishName)}`}
-        className="text-xs text-orange-500 hover:underline mt-1 inline-block"
+        className="text-xs text-orange-500 dark:text-orange-400 hover:underline mt-1 inline-block"
       >
         Xem cách nấu
       </Link>

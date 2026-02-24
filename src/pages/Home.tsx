@@ -34,7 +34,7 @@ export default function HomePage({ user }: { user: UserProfile }) {
   return (
     <div className="space-y-8 pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#111827] rounded-[2.5rem] p-8 sm:p-12 text-white shadow-xl shadow-orange-100/50">
+      <section className="relative overflow-hidden bg-[#111827] rounded-[2.5rem] p-8 sm:p-12 text-white shadow-xl shadow-orange-100/50 dark:shadow-none">
 
         {/* === Animated Gradient Orbs === */}
         <div
@@ -79,7 +79,6 @@ export default function HomePage({ user }: { user: UserProfile }) {
 
         {/* === Content === */}
         <div className="relative z-10">
-          {/* Dynamic Greeting */}
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">{emoji}</span>
             <p className="text-orange-300 text-sm font-semibold tracking-widest uppercase opacity-90">
@@ -103,7 +102,7 @@ export default function HomePage({ user }: { user: UserProfile }) {
       </section>
 
       <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
           <span className="w-2 h-6 bg-orange-500 rounded-full"></span>
           Khám phá tính năng
         </h2>
@@ -111,16 +110,16 @@ export default function HomePage({ user }: { user: UserProfile }) {
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           {/* Main Feature - Wide */}
-          <Link to="/analyze" className="sm:col-span-2 group relative bg-white p-6 sm:p-8 rounded-[2rem] shadow-sm border border-orange-50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full blur-2xl -mr-10 -mt-10 transition-all group-hover:bg-orange-100"></div>
+          <Link to="/analyze" className="sm:col-span-2 group relative bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-[2rem] shadow-sm border border-orange-50 dark:border-gray-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 dark:bg-orange-900/20 rounded-full blur-2xl -mr-10 -mt-10 transition-all group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30"></div>
             <div className="relative z-10 flex flex-col h-full justify-between">
-              <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+              <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
                 <Camera size={28} />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">AI Nhận diện món ăn</h3>
-                <p className="text-gray-500 mb-4">Chụp ảnh món ăn bất kỳ, AI sẽ phân tích nguyên liệu và cách nấu ngay lập tức.</p>
-                <div className="flex items-center text-orange-600 font-bold text-sm">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">AI Nhận diện món ăn</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">Chụp ảnh món ăn bất kỳ, AI sẽ phân tích nguyên liệu và cách nấu ngay lập tức.</p>
+                <div className="flex items-center text-orange-600 dark:text-orange-400 font-bold text-sm">
                   Thử ngay <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
                 </div>
               </div>
@@ -128,28 +127,28 @@ export default function HomePage({ user }: { user: UserProfile }) {
           </Link>
 
           {/* Feature 2 */}
-          <Link to="/recipe" className="group bg-gradient-to-br from-green-50 to-white p-6 sm:p-8 rounded-[2rem] shadow-sm border border-green-50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+          <Link to="/recipe" className="group bg-gradient-to-br from-green-50 dark:from-green-950/40 to-white dark:to-gray-900 p-6 sm:p-8 rounded-[2rem] shadow-sm border border-green-50 dark:border-gray-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="w-14 h-14 bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
               <Utensils size={28} />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Gợi ý công thức</h3>
-            <p className="text-gray-500 text-sm">Bạn có nguyên liệu gì? Để AI gợi ý món ngon.</p>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Gợi ý công thức</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">Bạn có nguyên liệu gì? Để AI gợi ý món ngon.</p>
           </Link>
 
           {/* Feature 3 */}
-          <Link to="/meal-plan" className="group bg-gradient-to-br from-blue-50 to-white p-6 sm:p-8 rounded-[2rem] shadow-sm border border-blue-50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+          <Link to="/meal-plan" className="group bg-gradient-to-br from-blue-50 dark:from-blue-950/40 to-white dark:to-gray-900 p-6 sm:p-8 rounded-[2rem] shadow-sm border border-blue-50 dark:border-gray-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
               <Calendar size={28} />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Thực đơn 7 ngày</h3>
-            <p className="text-gray-500 text-sm">Lên lịch ăn cả tuần, không lo trùng món.</p>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Thực đơn 7 ngày</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">Lên lịch ăn cả tuần, không lo trùng món.</p>
           </Link>
 
           {/* Feature 4 - Coming soon */}
-          <div className="hidden sm:flex bg-gray-50 p-6 sm:p-8 rounded-[2rem] border border-dashed border-gray-200 flex-col items-center justify-center text-center opacity-60">
+          <div className="hidden sm:flex bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 rounded-[2rem] border border-dashed border-gray-200 dark:border-gray-700 flex-col items-center justify-center text-center opacity-60">
             <div className="text-4xl mb-2">🔜</div>
-            <p className="font-bold text-gray-500">Tính năng mới</p>
-            <p className="text-xs text-gray-400">Sắp ra mắt...</p>
+            <p className="font-bold text-gray-500 dark:text-gray-400">Tính năng mới</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">Sắp ra mắt...</p>
           </div>
         </div>
       </div>

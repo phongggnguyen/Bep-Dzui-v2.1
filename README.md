@@ -27,9 +27,9 @@ Dự án tuân theo cấu trúc `src` chuẩn để dễ dàng mở rộng và b
 
 ```
 src/
-├── components/      # Các thành phần UI tái sử dụng (Button, Input, Layout...)
-├── context/         # Quản lý trạng thái toàn cục (AuthContext...)
-├── pages/           # Các trang chính (Home, Recipe, Login...)
+├── components/      # Các thành phần UI tái sử dụng (Button, Input, Chat...)
+├── context/         # Quản lý trạng thái toàn cục (AuthContext, ThemeContext)
+├── pages/           # Các trang chính (Home, Recipe, About, Login...)
 ├── services/        # Xử lý logic API (Gemini, Firebase)
 ├── types/           # Định nghĩa kiểu dữ liệu TypeScript (User, Recipe...)
 ├── utils/           # Các hàm tiện ích hỗ trợ
@@ -43,6 +43,7 @@ src/
 *   **🍳 Tạo công thức thông minh:** Tự động tạo công thức chi tiết từ tên món ăn hoặc hình ảnh nguyên liệu có sẵn.
 *   **📅 Lập kế hoạch bữa ăn:** Lên thực đơn cho cả tuần chỉ với vài cú click chuột.
 *   **🤖 "Bếp phó Dzui" AI:** Chatbot thông minh hỗ trợ nấu ăn 24/7.
+*   **🌙 Chế độ Sáng/Tối (Dark Mode):** Chuyển đổi giao diện theo sở thích bằng một nút bấm.
 *   **🥗 Góc sức khỏe & Dinh dưỡng:**
     *   **Health Score:** Chấm điểm độ lành mạnh (0-100).
     *   **Calo & Macro:** Tính toán năng lượng và dưỡng chất.
@@ -104,6 +105,17 @@ Tính năng độc quyền giúp bạn ăn ngon mà vẫn healthy:
 *   **Tags dinh dưỡng:** "Giàu Protein", "Ít Carb", "Nhiều Vitamin C"...
 *   **Lời khuyên:** AI phân tích dựa trên mục tiêu cá nhân (Giảm cân/Tăng cơ).
 *   **Gợi ý vận động:** "Ăn phở bò? Hãy chạy bộ 30 phút nhé!"
+
+---
+
+## 🌙 Dark Mode
+
+Bếp Dzui hỗ trợ giao diện **Sáng / Tối** giúp bảo vệ mắt khi dùng vào ban đêm.
+
+*   **Bật/Tắt:** Nhấn nút **Moon 🌙 / Sun ☀️** ở cuối sidebar (desktop) hoặc góc phải header (mobile).
+*   **Tự động ghi nhớ:** Lựa chọn được lưu vào `localStorage`, giữ nguyên sau khi reload trang.
+*   **Phát hiện hệ thống:** Lần đầu mở app, giao diện tự khớp với cài đặt `prefers-color-scheme` của thiết bị.
+*   **Triển khai:** Sử dụng Tailwind CSS `darkMode: 'class'` và React Context API (`ThemeContext`).
 
 ---
 *Developed with ❤️ by Phong Nguyen*

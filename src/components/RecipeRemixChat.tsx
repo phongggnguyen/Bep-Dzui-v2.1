@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, ChefHat, Loader2, Sparkles, Minimize2 } from 'lucide-react';
+import { X, Send, Loader2, Sparkles } from 'lucide-react';
 import { createRemixChat } from '@/services/geminiService';
 import { GenerateContentResponse } from '@google/genai';
 import { Recipe } from '@/types';
@@ -44,7 +44,7 @@ const BoldParser = ({ text }: { text: string }) => {
         <>
             {parts.map((part, i) => {
                 if (part.startsWith('**') && part.endsWith('**')) {
-                    return <strong key={i} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+                    return <strong key={i} className="font-bold text-gray-900 dark:text-gray-100">{part.slice(2, -2)}</strong>;
                 }
                 return <span key={i}>{part}</span>;
             })}
@@ -81,7 +81,6 @@ export default function RecipeRemixChat({ recipe, onRemix, onClose }: RecipeRemi
         try {
             if (!chatRef.current) chatRef.current = createRemixChat(recipe.name);
             const result = await chatRef.current.sendMessageStream({ message: userMsg });
-
             let fullResponse = "";
             setMessages(prev => [...prev, { role: 'model', text: "" }]);
 
@@ -103,24 +102,14 @@ export default function RecipeRemixChat({ recipe, onRemix, onClose }: RecipeRemi
     };
 
     const handleTriggerRemix = () => {
-        // Combine recent user messages to form the remix context
-        // Filter only user messages for the request context
-        const userRequests = messages
-            .filter(m => m.role === 'user')
-            .map(m => m.text)
-            .join(". ");
-
-        if (!userRequests) {
-            // Fallback if user clicked remix without typing anything? 
-            // Force them to say something or just send "Remix it"
-            return;
-        }
+        const userRequests = messages.filter(m => m.role === 'user').map(m => m.text).join(". ");
+        if (!userRequests) return;
         onRemix(userRequests);
     };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in backdrop-blur-sm">
-            <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[600px] max-h-[90vh] animate-slide-up">
+            <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[600px] max-h-[90vh] animate-slide-up">
 
                 {/* Header */}
                 <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 text-white flex justify-between items-center shadow-md">
@@ -139,12 +128,12 @@ export default function RecipeRemixChat({ recipe, onRemix, onClose }: RecipeRemi
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-indigo-50 scrollbar-hide">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-indigo-50 dark:bg-indigo-950/20 scrollbar-hide">
                     {messages.map((msg, idx) => (
                         <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm shadow-sm ${msg.role === 'user'
-                                    ? 'bg-purple-600 text-white rounded-br-none'
-                                    : 'bg-white text-gray-800 border border-indigo-100 rounded-bl-none'
+                                ? 'bg-purple-600 text-white rounded-br-none'
+                                : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-indigo-100 dark:border-gray-700 rounded-bl-none'
                                 }`}>
                                 <FormattedMessage text={msg.text} isModel={msg.role === 'model'} />
                             </div>
@@ -152,8 +141,8 @@ export default function RecipeRemixChat({ recipe, onRemix, onClose }: RecipeRemi
                     ))}
                     {isTyping && (
                         <div className="flex justify-start">
-                            <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm">
-                                <Loader2 size={16} className="animate-spin text-purple-600" />
+                            <div className="bg-white dark:bg-gray-800 p-3 rounded-2xl rounded-bl-none shadow-sm border border-indigo-100 dark:border-gray-700">
+                                <Loader2 size={16} className="animate-spin text-purple-600 dark:text-purple-400" />
                             </div>
                         </div>
                     )}
@@ -161,25 +150,24 @@ export default function RecipeRemixChat({ recipe, onRemix, onClose }: RecipeRemi
                 </div>
 
                 {/* Action Bar */}
-                <div className="p-3 bg-white border-t border-gray-100">
-                    {/* Remix Trigger Button - Only show if there's user interaction */}
+                <div className="p-3 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
                     {messages.filter(m => m.role === 'user').length > 0 && (
                         <button
                             onClick={handleTriggerRemix}
-                            className="w-full mb-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 animate-pulse-slow"
+                            className="w-full mb-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
                         >
                             <Sparkles size={18} />
                             <span>Remix Công Thức Ngay!</span>
                         </button>
                     )}
 
-                    <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded-full border border-gray-200">
+                    <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 p-1.5 rounded-full border border-gray-200 dark:border-gray-700">
                         <input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Thêm cay, bớt ngọt..."
-                            className="flex-1 bg-transparent px-4 py-2 text-sm outline-none text-gray-700"
+                            className="flex-1 bg-transparent px-4 py-2 text-sm outline-none text-gray-700 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-500"
                             disabled={isTyping}
                         />
                         <button

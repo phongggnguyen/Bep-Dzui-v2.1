@@ -14,6 +14,7 @@ import AboutPage from '@/pages/About';
 
 import { UserProfile } from '@/types';
 import SousChefChat from '@/components/SousChefChat';
+import ThemeToggle from '@/components/ThemeToggle';
 import { useAuth } from '@/context/AuthContext';
 
 // Default user profile (used for guests or as a fallback)
@@ -80,7 +81,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Đang tải...</div>;
+    return <div className="flex justify-center items-center h-screen text-gray-800 dark:text-gray-200">Đang tải...</div>;
   }
 
   if (!currentUser && !isGuest) {
@@ -99,40 +100,45 @@ export default function App() {
       await authSaveProfile(profile);
     } catch (error) {
       console.error('Failed to save profile:', error);
-      throw error; // Re-throw to let component handle UI feedback
+      throw error;
     }
   };
 
   return (
     <Router>
-      <div className="min-h-screen bg-[#FFF7ED] text-gray-800 font-sans pb-24 sm:pb-0 selection:bg-orange-200 selection:text-orange-900">
-        <header className="sticky top-0 z-20 sm:hidden px-6 py-4 bg-white/80 backdrop-blur-md border-b border-orange-100 flex items-center justify-between">
+      <div className="min-h-screen bg-[#FFF7ED] dark:bg-gray-950 text-gray-800 dark:text-gray-100 font-sans pb-24 sm:pb-0 selection:bg-orange-200 selection:text-orange-900 transition-colors duration-300">
+        {/* --- Mobile Header --- */}
+        <header className="sticky top-0 z-20 sm:hidden px-6 py-4 bg-white/80 dark:bg-gray-900/90 backdrop-blur-md border-b border-orange-100 dark:border-gray-800 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-orange-600 font-bold text-2xl tracking-tight hover:opacity-80 transition-opacity">
             <BepDzuiLogo size={36} />
             <span>Bếp Dzui</span>
           </Link>
-          {(currentUser || isGuest) && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={logout}
-                className="p-2.5 rounded-xl text-orange-600 bg-orange-50 hover:bg-orange-100 active:scale-95 transition-all duration-200 border border-orange-100/50 shadow-sm flex items-center justify-center"
-                aria-label="Đăng xuất"
-                title="Đăng xuất"
-              >
-                <LogoutIcon size={18} />
-              </button>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md border-2 border-white">
-                {userProfile.name.charAt(0).toUpperCase()}
-              </div>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <ThemeToggle compact />
+            {(currentUser || isGuest) && (
+              <>
+                <button
+                  onClick={logout}
+                  className="p-2.5 rounded-xl text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-gray-800 hover:bg-orange-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 border border-orange-100/50 dark:border-gray-700 shadow-sm flex items-center justify-center"
+                  aria-label="Đăng xuất"
+                  title="Đăng xuất"
+                >
+                  <LogoutIcon size={18} />
+                </button>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md border-2 border-white dark:border-gray-800">
+                  {userProfile.name.charAt(0).toUpperCase()}
+                </div>
+              </>
+            )}
+          </div>
         </header>
 
         <div className="max-w-7xl mx-auto sm:flex min-h-screen">
+          {/* --- Desktop Sidebar --- */}
           <aside className="hidden sm:flex flex-col w-72 h-screen sticky top-0 p-6">
             <Link
               to="/"
-              className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 shadow-sm mb-6 border border-white/50 block group hover:bg-white/80 transition-all duration-300"
+              className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-3xl p-6 shadow-sm mb-6 border border-white/50 dark:border-gray-800 block group hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-300"
             >
               <div className="flex items-center gap-3 text-orange-600 font-extrabold text-2xl tracking-tight">
                 <div className="relative group-hover:scale-105 transition-transform duration-300">
@@ -141,26 +147,26 @@ export default function App() {
                 </div>
                 <span>Bếp Dzui</span>
               </div>
-              <p className="text-xs text-gray-500 mt-2 font-medium pl-1">Trợ lý nấu ăn AI</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-medium pl-1">Trợ lý nấu ăn AI</p>
             </Link>
 
-            <nav className="flex-1 flex flex-col gap-3 bg-white/60 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/50 overflow-y-auto">
-              <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Menu</div>
+            <nav className="flex-1 flex flex-col gap-3 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/50 dark:border-gray-800 overflow-y-auto">
+              <div className="px-4 py-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Menu</div>
               <NavButton to="/" icon={<Home size={20} />} label="Khám phá" />
               <NavButton to="/analyze" icon={<Camera size={20} />} label="Scan món ăn" />
               <NavButton to="/recipe" icon={<ChefHat size={20} />} label="Tạo công thức" />
               {(currentUser || isGuest) && <NavButton to="/meal-plan" icon={<CalendarDays size={20} />} label="Thực đơn tuần" />}
               <NavButton to="/about" icon={<Info size={20} />} label="Về chúng tôi" />
 
-              <div className="my-2 border-t border-gray-100"></div>
+              <div className="my-2 border-t border-gray-100 dark:border-gray-800"></div>
 
-              <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Tài khoản</div>
+              <div className="px-4 py-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Tài khoản</div>
               {(currentUser || isGuest) ? (
                 <>
                   <NavButton to="/profile" icon={<User size={20} />} label="Hồ sơ cá nhân hóa" />
                   <button
                     onClick={logout}
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group text-gray-600 hover:bg-orange-50 hover:text-orange-600"
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group text-gray-600 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-gray-800 hover:text-orange-600 dark:hover:text-orange-400"
                   >
                     <LogoutIcon size={20} />
                     <span className="font-medium">Đăng xuất</span>
@@ -169,16 +175,19 @@ export default function App() {
               ) : (
                 <NavButton to="/login" icon={<LogIn size={20} />} label="Đăng nhập" />
               )}
+
+              <div className="my-2 border-t border-gray-100 dark:border-gray-800"></div>
+              <ThemeToggle />
             </nav>
 
             {(currentUser || isGuest) && (
-              <div className="mt-6 bg-white rounded-2xl p-4 shadow-sm border border-orange-100 flex items-center gap-3">
+              <div className="mt-6 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-orange-100 dark:border-gray-800 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md">
                   {userProfile.name.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-gray-800 truncate">{userProfile.name}</p>
-                  <p className="text-xs text-gray-500 truncate">{currentUser ? currentUser.email : 'Chế độ khách'}</p>
+                  <p className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate">{userProfile.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{currentUser ? currentUser.email : 'Chế độ khách'}</p>
                 </div>
               </div>
             )}
@@ -206,7 +215,7 @@ export default function App() {
         </div>
 
         {/* --- Mobile Nav --- */}
-        <nav className="fixed bottom-4 left-4 right-4 bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 flex justify-around p-4 sm:hidden z-50">
+        <nav className="fixed bottom-4 left-4 right-4 bg-white/90 dark:bg-gray-900/95 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 dark:border-gray-800 flex justify-around p-4 sm:hidden z-50">
           <MobileNavLink to="/" icon={<Home size={24} />} />
           <MobileNavLink to="/analyze" icon={<Camera size={24} />} />
           <div className="-mt-8">
@@ -242,7 +251,7 @@ const NavButton = ({ to, icon, label }: { to: string; icon: React.ReactNode; lab
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${isActive
           ? 'bg-orange-500 text-white shadow-lg shadow-orange-200 font-semibold'
-          : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'
+          : 'text-gray-600 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-gray-800 hover:text-orange-600 dark:hover:text-orange-400'
         }`
       }
     >
@@ -257,7 +266,7 @@ const MobileNavLink = ({ to, icon }: { to: string; icon: React.ReactNode }) => {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-colors ${isActive ? 'text-orange-600 bg-orange-50' : 'text-gray-400'
+        `flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-colors ${isActive ? 'text-orange-600 bg-orange-50 dark:bg-orange-900/30' : 'text-gray-400 dark:text-gray-500'
         }`
       }
     >

@@ -10,7 +10,7 @@ interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
 const AuthInput: React.FC<AuthInputProps> = ({ label, icon, error, className = '', ...props }) => {
   return (
     <div className="mb-5">
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
         {label}
       </label>
       <div className="relative group">
@@ -23,14 +23,14 @@ const AuthInput: React.FC<AuthInputProps> = ({ label, icon, error, className = '
           className={`
             w-full px-4 py-3.5
             ${icon ? 'pl-12' : ''}
-            bg-white/50 backdrop-blur-sm
-            border-2 border-gray-200
+            bg-white/50 dark:bg-gray-800/80 backdrop-blur-sm
+            border-2 border-gray-200 dark:border-gray-700
             rounded-xl
-            text-gray-800 placeholder-gray-400
+            text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
             transition-all duration-300
-            focus:outline-none focus:border-orange-500 focus:bg-white focus:shadow-lg focus:shadow-orange-100
-            hover:border-gray-300
-            disabled:bg-gray-100 disabled:cursor-not-allowed
+            focus:outline-none focus:border-orange-500 focus:bg-white dark:focus:bg-gray-800 focus:shadow-lg focus:shadow-orange-100 dark:focus:shadow-none
+            hover:border-gray-300 dark:hover:border-gray-600
+            disabled:bg-gray-100 dark:disabled:bg-gray-900 disabled:cursor-not-allowed
             ${error ? 'border-red-500 focus:border-red-500' : ''}
             ${className}
           `}
