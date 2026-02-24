@@ -10,10 +10,10 @@
 
 ## 📸 Hình ảnh minh họa
 
-| <img src="docs/assets/img1.png" width="450"> | <img src="docs/assets/img2.png" width="450"> |
+| <img src="docs/assets/img1.png" width="380"> | <img src="docs/assets/img2.png" width="380"> |
 | :---: | :---: |
-| <img src="docs/assets/img3.png" width="450"> | <img src="docs/assets/img4.png" width="450"> |
-| <img src="docs/assets/img5.png" width="450"> | |
+| <img src="docs/assets/img3.png" width="380"> | <img src="docs/assets/img4.png" width="380"> |
+| <img src="docs/assets/img5.png" width="380"> | |
 
 ---
 
